@@ -1,0 +1,1074 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"co",
+				"connectionBadMove"
+			],
+			[
+				"Car",
+				"Card0"
+			],
+			[
+				"Card",
+				"Card1"
+			],
+			[
+				"card",
+				"cardIndex"
+			],
+			[
+				"car",
+				"cardPos"
+			],
+			[
+				"sho",
+				"ShowCards"
+			],
+			[
+				"serial",
+				"serialHead"
+			],
+			[
+				"com",
+				"compose2"
+			],
+			[
+				"landm",
+				"landmark"
+			],
+			[
+				"lan",
+				"landmark_pub"
+			],
+			[
+				"landma",
+				"landmark_pub"
+			],
+			[
+				"Lan",
+				"LandmarkMonitor"
+			],
+			[
+				"La",
+				"LandmarkDistance"
+			],
+			[
+				"L",
+				"LandmarkDistance"
+			],
+			[
+				"land",
+				"landmark"
+			],
+			[
+				"re",
+				"result"
+			],
+			[
+				"Od",
+				"OdomCallback"
+			],
+			[
+				"Ini",
+				"InitLandmarks"
+			],
+			[
+				"message",
+				"message_runtime"
+			],
+			[
+				"it",
+				"iterator"
+			],
+			[
+				"end",
+				"endl"
+			],
+			[
+				"for",
+				"forward_list"
+			],
+			[
+				"be",
+				"begin"
+			],
+			[
+				"o",
+				"omnivore"
+			],
+			[
+				"je",
+				"jeMange"
+			],
+			[
+				"to",
+				"toString"
+			],
+			[
+				"en",
+				"enseignant"
+			],
+			[
+				"spe",
+				"specialite"
+			],
+			[
+				"sp",
+				"specialite"
+			],
+			[
+				"p",
+				"pt"
+			],
+			[
+				"T",
+				"Triplets"
+			],
+			[
+				"get",
+				"getValue"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"capi",
+				"capitale"
+			],
+			[
+				"pa",
+				"paysOfVille"
+			],
+			[
+				"N",
+				"nom"
+			],
+			[
+				"str",
+				"string"
+			],
+			[
+				"t",
+				"throw"
+			],
+			[
+				"Ret",
+				"rectangle"
+			],
+			[
+				"reta",
+				"rectangle"
+			],
+			[
+				"par",
+				"partReal"
+			],
+			[
+				"num",
+				"numberOriginal"
+			],
+			[
+				"n",
+				"number"
+			],
+			[
+				"file",
+				"fileOUT"
+			],
+			[
+				"txt",
+				"txt"
+			],
+			[
+				"pr",
+				"preelle"
+			],
+			[
+				"c2",
+				"c2c3"
+			],
+			[
+				"ex",
+				"ecrireComplexe"
+			],
+			[
+				"r",
+				"rho"
+			],
+			[
+				"c",
+				"complexe"
+			],
+			[
+				"aff",
+				"afficherMatrice"
+			],
+			[
+				"prin",
+				"printArray"
+			],
+			[
+				"do",
+				"double"
+			],
+			[
+				"vect",
+				"vecteurs"
+			],
+			[
+				"cha",
+				"character"
+			],
+			[
+				"a",
+				"a"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.cpp",
+			"settings":
+			{
+				"buffer_size": 1625,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "// header-start\n////////////////////////////////////////////////////////////////////////////////\n// \\project   memory\n//\n// \\file      Game.hpp\n//\n// \\brief     Game class (MCV modele : observed)\n//\n// \\legal     MIT licence\n//\n// \\author    Abilio AZEVEDO\n//\n// \\version   01/05/2018\n//\n////////////////////////////////////////////////////////////////////////////////\n// header-end\n\n#pragma once\n\n#include <algorithm>    // std::random_shuffle\n#include <vector>       // std::vector\n#include <ctime>        // std::time\n#include <cstdlib>      // std::rand, std::srand\n\n#include \"card.hpp\"\n#include \"observable.hpp\"\n\nclass game : public observable<game *>{\n	private:\n		int width;\n        int length;\n        int size;\n        card *deck;\n        int moves = -1;\n        int *selectedCards;\n        int points =0;\n        bool win = false;\n        bool badMove = false;\n        bool gameMoved = false;\n        bool bombCard = false;\n        bool chanceCard = false;\n        int PairsToDo = 0;\n        int PairsMade = 0;\n	public:\n  		game(int w,int l):width(w),length(l){\n            deck = new card[w*l];\n            size = width*length;\n            for(int i = 0; i < width; i++){\n                for(int j = 0; j < length; j++){\n                    int index = i * (width) + j;\n                    //std::cout << \"Index = \" << index <<std::endl;\n                    deck[index].SetValue(1);\n                }\n            }\n        }\n        bool getWin(){\n            return win;\n        }\n        bool getBadMove(){\n            return badMove;\n        }\n        bool getGameMoved(){\n            return gameMoved;\n        }\n        bool getChanceCard(){\n            return chanceCard;\n        }\n        bool getBombCard(){\n            return bombCard;\n        }\n        int getPoints(){\n            return points;\n        }\n        card* getDeck(){\n            return deck;\n        }\n        card& at(int i1, int i2) {\n            return deck[i1 * width + i2];\n        }\n\n  		virtual ~game() {}\n\n         // random generator function:\n        static int myrandom (int i) { return std::rand()%i;}\n\n        void NewGame(){\n            points=0;\n            moves=-1;\n            win=false;\n            SetGame();\n            ShowGame(true);\n            ShowBoard();\n            ShowGame(false);\n            ShowBoard();\n        }\n\n  		void SetGame(){\n            std::srand ( unsigned ( std::time(0) ) );\n            std::vector<int> myvector;\n\n            // set some values:\n            switch(size){\n                case(4):{\n                    PairsToDo=size/2;\n                    std::cout<<\"PairsToDo = \"<<PairsToDo <<std::endl;\n                    for (int j=0;j<2;j++){ //Pairs\n                        for (int i=1; i<=(PairsToDo); i++){\n                            myvector.push_back(i); // 1 2 3 4 5 6 7 8\n                        }\n                    }\n                    break;\n                }\n                default:{\n                    PairsToDo=size/2-1;\n                    std::cout<<\"PairsToDo = \"<<PairsToDo <<std::endl;\n                    for (int j=0;j<2;j++){ //Pairs\n                        for (int i=1; i<=(PairsToDo); i++){\n                            myvector.push_back(i); // 1 2 3 4 5 6 7 8\n                        }\n                    }\n                    myvector.push_back(-2); //Bomb\n                    myvector.push_back(-1); //Chance\n                    break;\n                }\n            }\n            // using built-in random generator:\n            std::random_shuffle ( myvector.begin(), myvector.end() );\n\n            // using myrandom:\n            std::random_shuffle ( myvector.begin(), myvector.end(), myrandom);\n\n            int i=0;\n            for (std::vector<int>::iterator it=myvector.begin(); it!=myvector.end(); ++it){\n                 deck[i].SetValue(*it);\n                 i++;\n            }\n		} \n\n        void MoveGame(){\n            card temp = deck[0];\n            for (int i=0; i<(size - 1); i++)\n            {\n                deck[i] = deck[i+1] ;\n            }\n            deck[size - 1] = temp;\n            gameMoved = true;\n        }       \n\n		void ShowBoard(){\n            for(int i = 0; i < width; i++){\n                for(int j = 0; j < length; j++){\n                    if (deck[i * width + j].GetFaceUp()){\n                        std::cout << deck[i * width + j].GetValue() << \" \";\n                    }else{\n                        std::cout << \"*\" << \" \";\n                    }\n                }\n                std::cout << std::endl;\n            }\n        }\n        void ShowGame(bool show){\n            for(int i = 0; i < size; i++){\n                deck[i].SetFaceUp(show);\n            }\n        }\n\n    	void SelectCard(int cardIndex){\n            badMove = false;\n            gameMoved = false;\n            bombCard = false;\n            chanceCard = false;\n            std::cout<<\"cardIndex: \"<<cardIndex<<std::endl;\n            if (cardIndex>(size-1) || cardIndex<0){\n                std::cerr << \"Out of bounds!\" << std::endl;\n            }else{\n        		if (this->moves == -1){\n        			selectedCards = new int[2];\n        		}\n        		if (!deck[cardIndex].GetFaceUp()){\n        			deck[cardIndex].SetFaceUp(true);\n                    if(deck[cardIndex].GetValue()==-1){ //Chance Card\n                        points=points+100;\n                        chanceCard =true;\n                    }else if(deck[cardIndex].GetValue()==-2){ //Bomb Card\n                        points=points-100;\n                        bombCard =true;\n                    }else{\n            			this->moves++;\n            			std::cout << \"Move \" << this->moves << std::endl;\n            			selectedCards[moves]=cardIndex;\n                        if(this->moves>0){\n                            if(deck[selectedCards[0]].GetValue()==deck[selectedCards[1]].GetValue()){\n                                PairsMade++;\n                                this->moves=-1;\n                                points=points+100;\n                                if(PairsMade>=PairsToDo){\n                                    PairsMade=0;\n                                    std::cout << \"Good Move! Points = \"<< points << \" Winner!\" << std::endl;\n                                    win = true;\n                                }else{\n                                    std::cout << \"Good Move! Points = \"<< points << std::endl;\n                                    if(points==size/4){\n                                        this->ShowBoard();\n                                        std::cout << \"Move Game\"<<std::endl;\n                                        MoveGame();\n                                    }\n                                }\n                            }else{\n                                std::cout << \"Bad Move! No Points!\" << std::endl;\n                                badMove = true;\n                                this->ShowBoard();\n                                notifyObservator(this);\n                                std::cout << std::endl;\n                                deck[selectedCards[0]].SetFaceUp(false);\n                                deck[selectedCards[1]].SetFaceUp(false);\n                                this->moves=-1;\n                            }\n                        }\n                    }\n        		}else{\n        			std::cout << \"Card already selected!\" << std::endl;\n        		}\n            }\n            this->ShowBoard();\n            notifyObservator(this);\n        }\n};",
+			"file": "game.hpp",
+			"file_size": 7479,
+			"file_write_time": 1525189660000000,
+			"settings":
+			{
+				"buffer_size": 7479,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "graphView.hpp",
+			"settings":
+			{
+				"buffer_size": 5336,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "control.hpp",
+			"settings":
+			{
+				"buffer_size": 3415,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "observable.hpp",
+			"settings":
+			{
+				"buffer_size": 770,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "abstractObservator.hpp",
+			"settings":
+			{
+				"buffer_size": 538,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Projet/Ensemble3/Ensemble3.sublime-project",
+			"settings":
+			{
+				"buffer_size": 107,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "popupSize.hpp",
+			"settings":
+			{
+				"buffer_size": 1889,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "popupUser.hpp",
+			"settings":
+			{
+				"buffer_size": 2917,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "my_sql.hpp",
+			"settings":
+			{
+				"buffer_size": 5714,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "player.hpp",
+			"settings":
+			{
+				"buffer_size": 1747,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 654,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/c++14.sublime-build",
+	"command_palette":
+	{
+		"height": 94.0,
+		"selected_items":
+		[
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"c+",
+				"Set Syntax: C++"
+			],
+			[
+				"pyt",
+				"Set Syntax: Python"
+			],
+			[
+				"te",
+				"Set Syntax: Textile"
+			],
+			[
+				"set",
+				"Set Syntax: TeX"
+			],
+			[
+				"py",
+				"Set Syntax: Python"
+			],
+			[
+				"pyth",
+				"Set Syntax: Python"
+			],
+			[
+				"ph",
+				"Set Syntax: Python"
+			],
+			[
+				"c",
+				"Set Syntax: Objective-C"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"set s",
+				"Set Syntax: MATLAB"
+			],
+			[
+				"set syn",
+				"Set Syntax: CSS"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Projet - Rover/Rover.sublime-project",
+		"/Users/abilioazevedo/Downloads/PERFECT GREENS COLLECTION.rar",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/Ensemble/control.hpp",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/Ensemble/test.cpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/Makefile",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/observable.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/main.cpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/graphView.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/control.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/cards.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/card.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/abstractObservator.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/mainCards.cpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/menu.hpp",
+		"/home/user/Documents/ELEC4/C++/S8/Projet/Ensemble/vue.hpp",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/Maeva/vue.hpp",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/Abilio/vue.hpp",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/3-SERIAL_video_facial_landmarks.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/2-SERIALContinuos_video_facial.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/4-SERIAL_MOTORS_video_facial_landmarks.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/SERIAL_video_facial_landmarks.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/1-ROS_video_facial_landmarks.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/7-Rover/ROVER-Head/_6_ROS_Servo_stabilisation/_6_ROS_Servo_stabilisation.ino",
+		"/Users/abilioazevedo/Google Drive/Rover/Codes Arduino/MainSoftware/MainSoftware.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_5_ROS_Servo_stabilisation_Laser/_5_ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_10_Rover_Serial_Follow/_10_Rover_Serial_Follow.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_9_Servo_Serial_Follow_Simplier_Laser/_9_Servo_Serial_Follow_Simplier_Laser.ino",
+		"/Users/abilioazevedo/Documents/ROS/Python-Object-detection-deep-learning/ros_arduino_tracking3.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/video_facial_landmarksSerialContinuos.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/SERIALContinuos_video_facial.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_1_Arduino_nano_distance_laser/_1_Arduino_nano_distance_laser.ino",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/video_facial_landmarksSerial.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/ROS_video_facial_landmarks.py",
+		"/Users/abilioazevedo/Documents/ROS/Python-faceTracking/video_facial_landmarks.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_6_ROS_Servo_stabilisation_Laser/_6_ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_8_ROS_Servo_Serial_Follow Simplier/_8_ROS_Servo_Serial_Follow Simplier.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_8_ROS_Servo_Serial_FollowSimplier/_8_ROS_Servo_Serial_FollowSimplier.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER/ROVER-Head/_7_ROS_Servo_Serial_Follow/_7_ROS_Servo_Serial_Follow.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/_7_ROS_Servo_Serial_Follow/_7_ROS_Servo_Serial_Follow.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/_6_ROS_Servo_stabilisation_Laser copy/_6_ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Documents/ROS/Python-Object-detection-deep-learning/ros_arduino_tracking.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/_5_ROS_Servo_stabilisation_Laser/_5_ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/5_ROS_Servo_stabilisation_Laser/5_ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/5-ROS_Servo_stabilisation_Laser/5-ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Documents/ROS/Python-Object-detection-deep-learning/ros_arduino_tracking2.py",
+		"/Users/abilioazevedo/Downloads/real-time-facial-landmarks/video_facial_landmarks.py",
+		"/Users/abilioazevedo/Downloads/FWBCTKRIJD79BCA.ino",
+		"/Users/abilioazevedo/Documents/ROS/object-detection-deep-learning/ros_arduino_tracking2.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/Iniciacao/Cadeira6-Sequencial/Cadeira6-Sequencial.ino",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/untitled.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/2-vue.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/2-app.cpp",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/Abilio/app",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/app.cpp",
+		"/Users/abilioazevedo/Google Drive/Projet Programation/vue.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-controleur.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-vueGraph.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-observateur.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-observable.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-modele.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/3-main.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/1-GraphGTKMM.cc",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/vue.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD12_Meu/app.cpp",
+		"/Users/abilioazevedo/Documents/ROS/commands.txt",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/ROS_Servo_stabilisation_Laser/ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Documents/ROS/object-detection-deep-learning/deep_learning_object_detection.py",
+		"/Users/abilioazevedo/Documents/ROS/object-detection-deep-learning/ros_arduino_tracking.py",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD11_Meu/8-.cpp",
+		"/Users/abilioazevedo/Library/Application Support/Sublime Text 2/Packages/User/c++11.sublime-build",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD11_Meu/3-find_if.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD11_Meu/2-Fonctionnel.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD11_Meu/1-FonctionAnonymes.cpp",
+		"/Users/abilioazevedo/Google Drive/Rover/Carnet de bord/Abilio/Implémentation/Dectection+HeadControl/ros_arduino_tracking.py",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/ROVER-Head/ROS_Servo_stabilisation_Laser.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/2 - Projetos/BOMBA/BOMBA.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/2 - Projetos/BobinaPlay/BobinaPlay.ino",
+		"/Users/abilioazevedo/Dropbox/Developer/Arduino/ROS/CommunicationStringIntFloat/CommunicationStringIntFloat.ino",
+		"/Users/abilioazevedo/Documents/ROS/tinyPkgs/src/CMakeLists.txt",
+		"/Users/abilioazevedo/Documents/catkin_ws2/src/CMakeLists.txt",
+		"/Users/abilioazevedo/Documents/catkin_ws2/src/location_monitor/src/CMakeLists.txt",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/5-InteratorConteneur.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/1-Iterateur",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/4-dictionnaire",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/3-Table associative",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/2-Liste",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD10_Meu/td10.pdf",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD9_Meu/salarie.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD9_Meu/personne.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/complexe.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/complexe.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/tableau.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/3-testTableau.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/4-Application.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD9_Meu/personne.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD5_Meu/1-newAlocacao.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD3_Meu/testcomplexe.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD3_Meu/complexe.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD3_Meu/complexe.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/ProjetS7-Gieudes-Azevedo/ProjetS7/Matrice.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/ProjetS7-Gieudes-Azevedo/ExtensionsProjetS7/extensions.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/TripletsGeneric.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/testMatriceCreuse",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/PileChainee.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/PileChainee.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/PileChainee",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/MiniProject/MeuMiniProject1/noeud.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD7_Meu/carre.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD2_Meu/2-string concaténation.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD2_Meu/1-string.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD1_Meu/5-echanger.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD1_Meu/4-rectangle.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD1_Meu/1-bonjour1.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD1_Meu/2-bonjour2.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD1_Meu/3-age.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/sujet-18-01-17.pdf",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/Pays.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/Capitale.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/capitale.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/capitale.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/ville.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/ville.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/pays.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/DS/DS2/pays.hpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD7_Meu/1-testRectangle",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/tableau",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/2-testTableau.cpp",
+		"/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Praticas/TD8_Meu/1-testTableau.cpp"
+	],
+	"find":
+	{
+		"height": 28.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"{",
+			"score",
+			"sc",
+			"p",
+			"score",
+			"restart",
+			"connection",
+			"info",
+			"timeout",
+			"update",
+			"timer_start",
+			"            \n",
+			"}\n",
+			"bImg",
+			"permute",
+			"Laser",
+			"mpuYaw",
+			"Serial",
+			"ser",
+			"Laser",
+			"j",
+			"servo2.write",
+			"pos_change",
+			"AngModServoPitch",
+			"servo2.write",
+			"servo2.write(",
+			"servo3.write",
+			"servo2.write",
+			"pos_rec",
+			"frame",
+			"mpuInterrupt",
+			"mpu",
+			"void setup",
+			"setup",
+			"dmpReady",
+			"void leitura(void)",
+			"void leitura()",
+			"leitura()",
+			"hide()",
+			"convertirEnFahrenheit",
+			"update",
+			"Gtk::FILL",
+			"bClose.signal_clicked()",
+			"image",
+			"nb",
+			"image",
+			"−",
+			"list",
+			"roll",
+			"INFO",
+			"listener",
+			"str_detect",
+			"ros",
+			"talker",
+			"Angini3",
+			"Angini2",
+			"digito1",
+			"Serial",
+			"cb",
+			"cb(m",
+			"cb(M",
+			"str_detect",
+			"format",
+			"EIGENSPARSE",
+			"node",
+			"depen",
+			"find_package",
+			"PileChainee",
+			"data",
+			"−>",
+			"->",
+			"s",
+			"<<",
+			"infosmatcreuse",
+			"affichertriplets",
+			"detruire",
+			"<T>",
+			"noeud",
+			"sp",
+			"noeud",
+			"−>",
+			"−",
+			"-",
+			"−>",
+			"string",
+			"ville",
+			"capitale",
+			"Pays",
+			"&",
+			"c_str",
+			"−>",
+			"write",
+			"(N:natural:=1)",
+			"−>",
+			"figure",
+			"getElement",
+			"-",
+			"−",
+			"-",
+			"this−>cloner(p)-",
+			"-",
+			"{",
+			"ecrire",
+			"cloner",
+			"set",
+			"=",
+			"ifdef",
+			";\n",
+			"ofstream",
+			"std",
+			"std::"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.cpp",
+					"settings":
+					{
+						"buffer_size": 1625,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								960,
+								961
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 202.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "game.hpp",
+					"settings":
+					{
+						"buffer_size": 7479,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5715,
+								5715
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1889.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "graphView.hpp",
+					"settings":
+					{
+						"buffer_size": 5336,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5328,
+								5328
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1742.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "control.hpp",
+					"settings":
+					{
+						"buffer_size": 3415,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2454,
+								2454
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 519.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "observable.hpp",
+					"settings":
+					{
+						"buffer_size": 770,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "abstractObservator.hpp",
+					"settings":
+					{
+						"buffer_size": 538,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								535,
+								535
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/Users/abilioazevedo/Dropbox/Public/Escola/Superior/Brafitec/7_Polytech_Eletronique/Semestre1/Informatique/Programmation objet - C++ - Granet/Projet/Ensemble3/Ensemble3.sublime-project",
+					"settings":
+					{
+						"buffer_size": 107,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "popupSize.hpp",
+					"settings":
+					{
+						"buffer_size": 1889,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								965,
+								965
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 291.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "popupUser.hpp",
+					"settings":
+					{
+						"buffer_size": 2917,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								897,
+								898
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 335.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "my_sql.hpp",
+					"settings":
+					{
+						"buffer_size": 5714,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								955,
+								955
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1588.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "player.hpp",
+					"settings":
+					{
+						"buffer_size": 1747,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 384.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Makefile",
+					"settings":
+					{
+						"buffer_size": 654,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 225.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 183.0,
+	"status_bar_visible": true
+}
